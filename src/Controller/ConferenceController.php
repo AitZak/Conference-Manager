@@ -4,7 +4,11 @@ namespace App\Controller;
 
 use App\Entity\Conference;
 use App\Form\ConferenceType;
+use App\Manager\RankingManager;
 use App\Repository\ConferenceRepository;
+use App\Repository\RankingRepository;
+use Doctrine\ORM\QueryBuilder;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,10 +22,18 @@ class ConferenceController extends AbstractController
     /**
      * @Route("/all", name="conference_index", methods={"GET"})
      */
-    public function index(ConferenceRepository $conferenceRepository): Response
+    public function index(ConferenceRepository $conferenceRepository, RankingManager $rankingManager): Response
     {
+        $conferences = $conferenceRepository->findAll();
+        $averageRatings = [];
+        foreach ($conferences as $conference){
+            $average = $rankingManager->getAverageRatingFromConferenceId($conference->getId());
+            $averageRatings[$conference->getId()] = $average;
+        }
+
         return $this->render('conference/index.html.twig', [
             'conferences' => $conferenceRepository->findAll(),
+            'averageRatings' => $averageRatings,
         ]);
     }
 
@@ -51,10 +63,13 @@ class ConferenceController extends AbstractController
     /**
      * @Route("/{id}", name="conference_show", methods={"GET"})
      */
-    public function show(Conference $conference): Response
+    public function show(Conference $conference, RankingManager $rankingManager): Response
     {
+        $average = $rankingManager->getAverageRatingFromConferenceId($conference->getId());
+
         return $this->render('conference/show.html.twig', [
             'conference' => $conference,
+            'average' => $average,
         ]);
     }
 

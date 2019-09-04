@@ -13,6 +13,7 @@
                 <th>Description</th>
                 <th>Date</th>
                 <th>actions</th>
+                <th>note moyenne</th>
             </tr>
         </thead>
         <tbody>
@@ -25,6 +26,9 @@
                 <td>
                     <a href="{{ path('conference_show', {'id': conference.id}) }}">show</a>
                     <a href="{{ path('conference_edit', {'id': conference.id}) }}">edit</a>
+                </td>
+                <td>
+                    {{ averageRatings[conference.id] }}
                 </td>
             </tr>
         {% else %}
