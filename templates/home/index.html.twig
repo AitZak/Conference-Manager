@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello HomeController!{% endblock %}
+
+{% block body %}
+<h2>All conferences</h2>
+<table id="conferenceTable">
+    <thead>
+    <tr>
+        <th>Titre</th>
+        <th>Crée par</th>
+        <th>Note Moy.</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for conference in conferences %}
+    <tr>
+        <th>{{ conference.title }}</th>
+        <th>{{ conference.user.lastName }} {{ conference.user.firstname }}</th>
+        <th>{{ averageRatings[conference.id] }}</th>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
