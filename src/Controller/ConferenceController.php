@@ -6,6 +6,7 @@ use App\Entity\Conference;
 use App\Entity\User;
 use App\Form\ConferenceType;
 use App\Manager\EmailManager;
+use App\Manager\RatingManager;
 use App\Repository\ConferenceRepository;
 use Monolog\Handler\SwiftMailerHandler;
 use Swift_SendmailTransport;
@@ -23,10 +24,18 @@ class ConferenceController extends AbstractController
     /**
      * @Route("/all", name="conference_index", methods={"GET"})
      */
-    public function index(ConferenceRepository $conferenceRepository): Response
+    public function index(ConferenceRepository $conferenceRepository, RatingManager $ratingManager): Response
     {
+        $conferences = $conferenceRepository->findAll();
+        $averageRatings = [];
+        foreach ($conferences as $conference){
+            $average = $ratingManager->getAverageRatingFromConferenceId($conference->getId());
+            $averageRatings[$conference->getId()] = $average;
+        }
+
         return $this->render('conference/index.html.twig', [
             'conferences' => $conferenceRepository->findAll(),
+            'averageRatings' => $averageRatings,
         ]);
     }
 
@@ -57,10 +66,13 @@ class ConferenceController extends AbstractController
     /**
      * @Route("/{id}", name="conference_show", methods={"GET"})
      */
-    public function show(Conference $conference): Response
+    public function show(Conference $conference, RatingManager $ratingManager): Response
     {
+        $average = $ratingManager->getAverageRatingFromConferenceId($conference->getId());
+
         return $this->render('conference/show.html.twig', [
             'conference' => $conference,
+            'average' => $average,
         ]);
     }
 
