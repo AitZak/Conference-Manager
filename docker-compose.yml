@@ -17,7 +17,7 @@ services:
   mailhog:
     image: mailhog/mailhog:v1.0.0
     ports:
-      - "${REP_ENT_MAILHOG_PORT:-8025}:8025"
+      - 8025:8025
   database:
     image: mysql:5.7
     volumes:

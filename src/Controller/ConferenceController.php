@@ -3,8 +3,13 @@
 namespace App\Controller;
 
 use App\Entity\Conference;
+use App\Entity\User;
 use App\Form\ConferenceType;
+use App\Manager\EmailManager;
 use App\Repository\ConferenceRepository;
+use Monolog\Handler\SwiftMailerHandler;
+use Swift_SendmailTransport;
+use Swift_SmtpTransport;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -28,7 +33,7 @@ class ConferenceController extends AbstractController
     /**
      * @Route("/new", name="conference_new", methods={"GET","POST"})
      */
-    public function new(Request $request): Response
+    public function new(Request $request, EmailManager $emailManager): Response
     {
         $conference = new Conference();
         $form = $this->createForm(ConferenceType::class, $conference);
@@ -39,6 +44,7 @@ class ConferenceController extends AbstractController
             $entityManager->persist($conference);
             $entityManager->flush();
 
+            $emailManager->sendMailNewConferenceToAllUsers($conference);
             return $this->redirectToRoute('conference_index');
         }
 
