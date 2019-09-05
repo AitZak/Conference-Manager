@@ -11,6 +11,11 @@
     {% block stylesheets %}{% endblock %}
 </head>
 <body>
+<form action="{{ path('conference_search') }}" method="post">
+    <input type="text" placeholder="Rechercher par titre" name="titleSearch" />
+    <input type="submit" value="Envoyer"/>
+</form>
+
 <p>
     <a href="{{ path('home') }}">Home</a>
 </p>
