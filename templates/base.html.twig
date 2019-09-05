@@ -9,6 +9,17 @@
         {% block stylesheets %}{% endblock %}
     </head>
     <body>
+    <p>
+        <a href="{{ path('home') }}">Accueil</a>
+    </p>
+    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+        <p><a href="{{ path('logout') }}">Se déconnecter</a></p>
+    {% else %}
+        <p>
+            <a href="{{ path('login') }}">Se connecter</a>/<a href="{{ path('register') }}">S'inscrire</a>
+        </p>
+    {% endif %}
+
         {% block body %}{% endblock %}
         {% block javascripts %}
             <script>
