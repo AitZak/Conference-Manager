@@ -2,6 +2,8 @@
 
 namespace App\Manager;
 
+use App\Entity\Conference;
+use App\Entity\Rating;
 use App\Repository\RatingRepository;
 
 class RatingManager
@@ -27,4 +29,17 @@ class RatingManager
         }
         return 0;
     }
+
+    public function getBestConferences(int $nbConferences)
+    {
+        return $this->ratingRepository->createQueryBuilder('r')
+            ->innerJoin('r.conference', 'c')
+            ->select('c.id, c.title, c.description, AVG(r.value) AS average')
+            ->groupBy('c.id, c.title, c.description')
+            ->orderBy('AVG(r.value) ', 'DESC')
+            ->setMaxResults($nbConferences)
+            ->getQuery()
+            ->getArrayResult();
+    }
+
 }

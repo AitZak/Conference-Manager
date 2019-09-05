@@ -3,14 +3,11 @@
 namespace App\Controller;
 
 use App\Entity\Conference;
-use App\Entity\User;
 use App\Form\ConferenceType;
 use App\Manager\EmailManager;
 use App\Manager\RatingManager;
 use App\Repository\ConferenceRepository;
-use Monolog\Handler\SwiftMailerHandler;
-use Swift_SendmailTransport;
-use Swift_SmtpTransport;
+
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -36,6 +33,21 @@ class ConferenceController extends AbstractController
         return $this->render('conference/index.html.twig', [
             'conferences' => $conferenceRepository->findAll(),
             'averageRatings' => $averageRatings,
+        ]);
+    }
+
+    /**
+     * @Route("/best", name="conference_best", methods={"GET"})
+     */
+    public function best(ConferenceRepository $conferenceRepository, RatingManager $ratingManager): Response
+    {
+
+        // Nombre de conférences à afficher
+        $nbConferences = 10;
+
+        return $this->render('conference/best.html.twig', [
+            'conferences' => $ratingManager->getBestConferences($nbConferences),
+            'nbConferences' => $nbConferences,
         ]);
     }
 
