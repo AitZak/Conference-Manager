@@ -20,8 +20,8 @@ security:
                 username_parameter: "login_user[email]"
                 password_parameter: "login_user[password]"
             logout:
-                path:   \logout
-                target: \
+                path:   /logout
+                target: /
 
 
             # activate different ways to authenticate
