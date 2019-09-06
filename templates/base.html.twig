@@ -27,6 +27,7 @@
 {% if is_granted('IS_AUTHENTICATED_FULLY') %}
     <p><a href="{{ path('logout') }}">Log out</a></p>
     <p><a href="{{ path('voted_conferences') }}">Voted/unvoted conferences</a></p>
+    <p><a href="{{ path('conference_create') }}">Create a Conference</a></p>
 {% else %}
     <p>
         <a href="{{ path('login') }}">Log in</a>/<a href="{{ path('register') }}">Register</a>
