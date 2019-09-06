@@ -1,3 +1,6 @@
+## Conference Manager
+Vote for conferences and present conferences that will be voted by the community. 
+
 ## Getting Started
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
@@ -41,4 +44,7 @@ Web: http://localhost
 - Page des conférences notées / non votées
     > http://localhost/conference/voted
   
-  
+- Commande pour créer un admin 
+    > app:create-admin
+    
+
