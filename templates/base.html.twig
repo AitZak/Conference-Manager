@@ -5,37 +5,54 @@
     <title>{% block title %}Welcome!{% endblock %}</title>
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.18/datatables.min.css"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.css">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.18/datatables.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.js"></script>
     {% block stylesheets %}{% endblock %}
 </head>
 <body>
-<form action="{{ path('conference_search') }}" method="post">
-    <input type="text" placeholder="Rechercher par titre" name="titleSearch" />
-    <input type="submit" value="Envoyer"/>
-</form>
 
-<p>
-    <a href="{{ path('home') }}">Home</a>
-</p>
-{% if is_granted('ROLE_ADMIN') %}
-    <p><a href="{{ path('conference_best') }}">Top 10</a></p>
-    <p><a href="{{ path('conference_index') }}">All Conferences</a></p>
-    <p><a href="{{ path('user_index') }}">All Users</a></p>
-{% endif %}
-{% if is_granted('IS_AUTHENTICATED_FULLY') %}
-    <p><a href="{{ path('logout') }}">Log out</a></p>
-    <p><a href="{{ path('voted_conferences') }}">Voted/unvoted conferences</a></p>
-    <p><a href="{{ path('conference_create') }}">Create a Conference</a></p>
-{% else %}
-    <p>
-        <a href="{{ path('login') }}">Log in</a>/<a href="{{ path('register') }}">Register</a>
-    </p>
-{% endif %}
+<nav class="navbar navbar-expand-lg navbar-light bg-light" style="margin-bottom: 2%">
+    <a class="navbar-brand" href="{{ path('home') }}">Home</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                <a class="nav-link" href="{{ path('logout') }}">Log out <span class="sr-only">(current)</span></a>
+                <a class="nav-link" href="{{ path('voted_conferences') }}">Voted/unvoted conferences <span class="sr-only">(current)</span></a>
+                <a class="nav-link" href="{{ path('conference_create') }}">Create a Conference <span class="sr-only">(current)</span></a>
+            {% else %}
+                <a class="nav-link" href="{{ path('login') }}">Log In <span class="sr-only">(current)</span></a>
+                <a class="nav-link" href="{{ path('register') }}">Register <span class="sr-only">(current)</span></a>
+            {% endif %}
+            {% if is_granted('ROLE_ADMIN') %}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Admin
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="{{ path('user_index') }}">All users</a>
+                        <a class="dropdown-item" href="{{ path('conference_index') }}">All conferences</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="{{ path('conference_best') }}">Top 10</a>
+                    </div>
+                </li>
+            {% endif %}
+        </ul>
+        <form class="form-inline my-2 my-lg-0" action="{{ path('conference_search') }}" method="post">
+            <input class="form-control mr-sm-2" type="search" placeholder="Search per title" aria-label="Search" name="titleSearch">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        </form>
+    </div>
+</nav>
 
 {% block body %}{% endblock %}
 {% block javascripts %}
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.18/datatables.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.js"></script>
