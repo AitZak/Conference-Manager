@@ -28,24 +28,28 @@ cp .env.dist .env
 docker-compose up -d
 docker-compose exec web composer install
 docker-compose exec web php bin/console d:s:u --force 
+Write in .env: MAILER_URL=smtp://mailhog:1025
 ```
 ### functionalities
 
 Web: http://localhost
+phpMyAdmin: http://localhost:8080
+MailHog: http://localhost:8025
 
-- L’administrateur peut gérer les conférences
+- Administrator can manage conferences
     > http://localhost/admin/conference/all
   
-- L’administrateur peut voir le top 10 des conférences
+- Administrator can see the 10 most popular conferences
     > http://localhost/admin/conference/best
   
-- L’administrateur peut gérer les utilisateurs
+- Administrator can manage users
     > http://localhost/admin/user/
   
-- Page des conférences notées / non votées
+- Page of voted and not voted conferences
     > http://localhost/conference/voted
   
-- Commande pour créer un admin 
+- Create admin with command
     > app:create-admin
     
+- 
 
