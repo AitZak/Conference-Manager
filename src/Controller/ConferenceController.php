@@ -3,8 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\Conference;
-use App\Entity\User;
 use App\Form\ConferenceType;
+use App\Manager\ConferenceManager;
 use App\Manager\EmailManager;
 use App\Manager\RatingManager;
 use App\Repository\ConferenceRepository;
@@ -79,6 +79,21 @@ class ConferenceController extends AbstractController
     }
 
     /**
+     * @Route("/best", name="conference_best", methods={"GET"})
+     */
+    public function best(ConferenceRepository $conferenceRepository, RatingManager $ratingManager): Response
+    {
+
+        // Nombre de conférences à afficher
+        $nbConferences = 10;
+
+        return $this->render('conference/best.html.twig', [
+            'conferences' => $ratingManager->getBestConferences($nbConferences),
+            'nbConferences' => $nbConferences,
+        ]);
+    }
+
+    /**
      * @Route("/new", name="conference_new", methods={"GET","POST"})
      */
     public function new(Request $request, EmailManager $emailManager): Response
@@ -148,5 +163,25 @@ class ConferenceController extends AbstractController
         }
 
         return $this->redirectToRoute('conference_index');
+    }
+
+    /**
+     * @Route("/search", name="conference_search")
+     */
+    public function search(Request $request, ConferenceManager $conferenceManager, RatingManager $ratingManager): Response
+    {
+        $conferences = $conferenceManager->searchConferencesByTitle($request->request->get('titleSearch'));
+        $averageRatings = [];
+        foreach ($conferences as $conference){
+            $average = $ratingManager->getAverageRatingFromConferenceId($conference['id']);
+            $averageRatings[$conference['id']] = $average;
+        }
+
+        return $this->render('conference/index.html.twig', [
+            'conferences' => $conferences,
+            'averageRatings' => $averageRatings,
+        ]);
+
+
     }
 }

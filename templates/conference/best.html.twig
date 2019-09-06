@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Best Conferences{% endblock %}
+
+{% block body %}
+    <h1>{{ nbConferences }} Best conferences</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Note</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for conference in conferences %}
+            <tr>
+                <td><a href="{{ path('conference_show', {'id': conference.id}) }}" >{{ conference.title }}</a></td>
+                <td>{{ conference.description }}</td>
+                <td>{{ conference.average }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('conference_new') }}">Create new</a>
+{% endblock %}
