@@ -1,4 +1,5 @@
 ## Conference Manager
+
 Vote for conferences and present conferences that will be voted by the community. 
 
 ## Getting Started
@@ -30,11 +31,11 @@ docker-compose exec web composer install
 docker-compose exec web php bin/console d:s:u --force 
 Write in .env: MAILER_URL=smtp://mailhog:1025
 ```
-### functionalities
+### Functionalities
 
-Web: http://localhost
-phpMyAdmin: http://localhost:8080
-MailHog: http://localhost:8025
+- Web: http://localhost
+- phpMyAdmin: http://localhost:8080
+- MailHog: http://localhost:8025
 
 - Administrator can manage conferences
     > http://localhost/admin/conference/all
@@ -51,5 +52,3 @@ MailHog: http://localhost:8025
 - Create admin with command
     > app:create-admin
     
-- 
-
