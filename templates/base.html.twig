@@ -1,32 +1,33 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.18/datatables.min.css"/>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-        <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.18/datatables.min.js"></script>
-        {% block stylesheets %}{% endblock %}
-    </head>
-    <body>
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Welcome!{% endblock %}</title>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.18/datatables.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.18/datatables.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.js"></script>
+    {% block stylesheets %}{% endblock %}
+</head>
+<body>
+<p>
+    <a href="{{ path('home') }}">Home</a>
+</p>
+{% if is_granted('IS_AUTHENTICATED_FULLY') %}
+    <p><a href="{{ path('logout') }}">Log out</a></p>
+    <p><a href="{{ path('voted_conferences') }}">Voted/unvoted conferences</a></p>
+{% else %}
     <p>
-        <a href="{{ path('home') }}">Accueil</a>
+        <a href="{{ path('login') }}">Log in</a>/<a href="{{ path('register') }}">Register</a>
     </p>
-    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-        <p><a href="{{ path('logout') }}">Se déconnecter</a></p>
-    {% else %}
-        <p>
-            <a href="{{ path('login') }}">Se connecter</a>/<a href="{{ path('register') }}">S'inscrire</a>
-        </p>
-    {% endif %}
+{% endif %}
 
-        {% block body %}{% endblock %}
-        {% block javascripts %}
-            <script>
-                $(document).ready( function () {
-                    $('#conferenceTable').DataTable();
-                } );
-            </script>
-        {% endblock %}
-    </body>
+{% block body %}{% endblock %}
+{% block javascripts %}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.18/datatables.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.js"></script>
+{% endblock %}
+</body>
 </html>

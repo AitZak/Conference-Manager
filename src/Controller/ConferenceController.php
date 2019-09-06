@@ -8,6 +8,8 @@ use App\Form\ConferenceType;
 use App\Manager\EmailManager;
 use App\Manager\RatingManager;
 use App\Repository\ConferenceRepository;
+use App\Repository\RatingRepository;
+use App\Repository\UserRepository;
 use Monolog\Handler\SwiftMailerHandler;
 use Swift_SendmailTransport;
 use Swift_SmtpTransport;
@@ -21,6 +23,43 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class ConferenceController extends AbstractController
 {
+    /**
+     * @Route("/voted", name="voted_conferences", methods={"GET"})
+     */
+    public function votedConferences(ConferenceRepository $conferenceRepository, RatingManager $ratingManager)
+    {
+        $conferencesId = [];
+        foreach ($conferenceRepository->findAll() as $conference) {
+            array_push($conferencesId, $conference->getId());
+        }
+        $votedConfId = $ratingManager->getVotedConferencesByUser($this->getUser());
+        $unvotedConfId = array_diff($conferencesId,$votedConfId);
+
+        $votedConf = [];
+        $i = 0;
+        foreach ($votedConfId as $conferenceId){
+            $conf = $conferenceRepository->findOneBy(['id' => $conferenceId]);
+            $votedConf[$i]['id'] = $conf->getId();
+            $votedConf[$i]['title'] = $conf->getTitle();
+            $votedConf[$i]['description'] = $conf->getDescription();
+            $i++;
+        }
+        $unvotedConf = [];
+        $j = 0;
+        foreach ($unvotedConfId as $conferenceId) {
+            $conf = $conferenceRepository->findOneBy(['id' => $conferenceId]);
+            $unvotedConf[$j]['id'] = $conf->getId();
+            $unvotedConf[$j]['title'] = $conf->getTitle();
+            $unvotedConf[$j]['description'] = $conf->getDescription();
+            $j++;
+        }
+
+        return $this->render('conference/votedconferences.html.twig', [
+            'votedConferences' => $votedConf,
+            'unvotedConferences' => $unvotedConf,
+        ]);
+    }
+
     /**
      * @Route("/all", name="conference_index", methods={"GET"})
      */
@@ -66,12 +105,13 @@ class ConferenceController extends AbstractController
     /**
      * @Route("/{id}", name="conference_show", methods={"GET"})
      */
-    public function show(Conference $conference, RatingManager $ratingManager): Response
+    public function show(Conference $conference, RatingManager $ratingManager, RatingRepository $ratingRepository): Response
     {
         $average = $ratingManager->getAverageRatingFromConferenceId($conference->getId());
 
         return $this->render('conference/show.html.twig', [
             'conference' => $conference,
+            'ratings' => $ratingRepository->findAll(),
             'average' => $average,
         ]);
     }

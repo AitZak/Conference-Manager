@@ -7,19 +7,71 @@
 <table id="conferenceTable">
     <thead>
     <tr>
-        <th>Titre</th>
-        <th>Crée par</th>
-        <th>Note Moy.</th>
+        <th>Title</th>
+        <th>Created by</th>
+        <th>Average rate</th>
+        {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+        <th>My vote</th>
+        {% endif %}
     </tr>
     </thead>
     <tbody>
+    {% set i=0 %}
     {% for conference in conferences %}
+
     <tr>
-        <th>{{ conference.title }}</th>
-        <th>{{ conference.user.lastName }} {{ conference.user.firstname }}</th>
-        <th>{{ averageRatings[conference.id] }}</th>
+        <td style="text-align: center">{{ conference.title }}</td>
+        <td style="text-align: center">{{ conference.user.lastName }} {{ conference.user.firstname }}</td>
+        <td class="averageRate" data-rate="{{ averageRatings[conference.id] }}" style="margin: auto"></td>
+        {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+            {% set myRate = 0 %}
+            {% set voteExist = 0 %}
+            {% for rating in ratings %}
+            {% if rating.conference.id == conference.id and rating.user.id == app.user.id %}
+                {% set myRate = rating.value %}
+                {% set voteExist = 1 %}
+            {% endif %}
+            {% endfor %}
+
+            {% if voteExist == 1 %}
+                <td>
+                <a href="{{ path('conference_show', {'id': conference.id}) }}" class="myRate" id="{{ 'myRate'~i }}" data-rate="{{ myRate }}" style="margin: auto">Vote</a>
+                </td>
+            {% elseif voteExist == 0 %}
+                <td style="text-align: center">
+                    <a href="{{ path('conference_show', {'id': conference.id}) }}">Not rated yet</a>
+                </td>
+            {% endif %}
+
+
+        {% endif %}
     </tr>
+        {% set i=i+1 %}
     {% endfor %}
     </tbody>
 </table>
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        $(document).ready(function () {
+            $('#conferenceTable').DataTable();
+            $('.averageRate').each(function () {
+                var value = $(this).attr("data-rate");
+                $(this).rateYo({
+                    readOnly: true,
+                    rating: value,
+                    starWidth: "25px",
+                });
+            });
+            $('.myRate').each(function () {
+                var value = $(this).attr("data-rate");
+                $(this).rateYo({
+                    readOnly: true,
+                    rating: value,
+                    starWidth: "25px",
+                });
+            });
+        });
+    </script>
 {% endblock %}
