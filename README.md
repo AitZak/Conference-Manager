@@ -26,9 +26,10 @@ cp docker-compose.override.yml.dist docker-compose.override.yml
 ```bash
 cp .env.dist .env
 docker-compose up -d
-docker-compose exec --user=application web bash
+docker-compose exec web composer install
+docker-compose exec web php bin/console d:s:u --force 
 ```
-### Fonctionnalités
+### functionalities
 
 Web: http://localhost
 
