@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Conference index{% endblock %}
+
+{% block body %}
+    <h1>Results</h1>
+
+    <table class="table conferenceTable">
+        <thead>
+        <tr>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Average note</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for conference in conferences %}
+            <tr style="text-align: center">
+                <td>{{ conference.title }}</td>
+                <td>{{ conference.description }}</td>
+                <td class="averageRate" data-rate="{{ averageRatings[conference.id] }}" style="margin: auto"></td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+        <a href="{{ path('conference_new') }}">Create new</a>
+    {% endif %}
+
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        $(document).ready(function () {
+            $('.conferenceTable').DataTable();
+            $('.averageRate').each(function () {
+                var value = $(this).attr("data-rate");
+                $(this).rateYo({
+                    readOnly: true,
+                    rating: value,
+                    starWidth: "25px",
+                });
+            });
+        });
+    </script>
+{% endblock %}

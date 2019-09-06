@@ -108,7 +108,7 @@ class ConferenceController extends AbstractController
             $entityManager->flush();
 
             $emailManager->sendMailNewConferenceToAllUsers($conference);
-            return $this->redirectToRoute('conference_index');
+            return $this->redirectToRoute('home');
         }
 
         return $this->render('conference/new.html.twig', [
@@ -168,7 +168,7 @@ class ConferenceController extends AbstractController
     /**
      * @Route("/search", name="conference_search")
      */
-    public function search(Request $request, ConferenceManager $conferenceManager, RatingManager $ratingManager): Response
+    public function search(Request $request, ConferenceManager $conferenceManager, RatingManager $ratingManager, RatingRepository $ratingRepository): Response
     {
         $conferences = $conferenceManager->searchConferencesByTitle($request->request->get('titleSearch'));
         $averageRatings = [];
@@ -177,11 +177,10 @@ class ConferenceController extends AbstractController
             $averageRatings[$conference['id']] = $average;
         }
 
-        return $this->render('conference/index.html.twig', [
+        return $this->render('conference/search.html.twig', [
             'conferences' => $conferences,
+            'ratings' => $ratingRepository->findAll(),
             'averageRatings' => $averageRatings,
         ]);
-
-
     }
 }
