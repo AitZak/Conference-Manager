@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Conference;
 use App\Form\ConferenceType;
+use App\Manager\ConferenceManager;
 use App\Manager\EmailManager;
 use App\Manager\RatingManager;
 use App\Repository\ConferenceRepository;
@@ -120,5 +121,25 @@ class ConferenceController extends AbstractController
         }
 
         return $this->redirectToRoute('conference_index');
+    }
+
+    /**
+     * @Route("/search", name="conference_search")
+     */
+    public function search(Request $request, ConferenceManager $conferenceManager, RatingManager $ratingManager): Response
+    {
+        $conferences = $conferenceManager->searchConferencesByTitle($request->request->get('titleSearch'));
+        $averageRatings = [];
+        foreach ($conferences as $conference){
+            $average = $ratingManager->getAverageRatingFromConferenceId($conference['id']);
+            $averageRatings[$conference['id']] = $average;
+        }
+
+        return $this->render('conference/index.html.twig', [
+            'conferences' => $conferences,
+            'averageRatings' => $averageRatings,
+        ]);
+
+
     }
 }
