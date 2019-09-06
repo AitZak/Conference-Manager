@@ -72,6 +72,7 @@ class ConferenceController extends AbstractController
         if( $form->isSubmitted() && $form->isValid()){
             $em->persist($conference);
             $em->flush();
+            return $this->redirectToRoute('home');
         }
 
         return $this->render('conference/create.html.twig', [

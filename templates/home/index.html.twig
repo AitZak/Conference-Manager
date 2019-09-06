@@ -6,7 +6,7 @@
 <h2>All conferences</h2>
 <table id="conferenceTable">
     <thead>
-    <tr>
+    <tr style="text-align: center">
         <th>Title</th>
         <th>Created by</th>
         <th>Average rate</th>
@@ -53,6 +53,7 @@
 {% endblock %}
 
 {% block javascripts %}
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     <script>
         $(document).ready(function () {
             $('#conferenceTable').DataTable();
