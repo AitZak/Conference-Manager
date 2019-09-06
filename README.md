@@ -30,15 +30,15 @@ docker-compose exec --user=application web bash
 Web: http://localhost
 
 - L’administrateur peut gérer les conférences
-> http://localhost/admin/conference/all
+    > http://localhost/admin/conference/all
   
 - L’administrateur peut voir le top 10 des conférences
-> http://localhost/admin/conference/best
+    > http://localhost/admin/conference/best
   
 - L’administrateur peut gérer les utilisateurs
-> http://localhost/admin/user/
+    > http://localhost/admin/user/
   
 - Page des conférences notées / non votées
-> http://localhost/conference/voted
+    > http://localhost/conference/voted
   
   
