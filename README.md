@@ -44,11 +44,11 @@ Write in .env: MAILER_URL=smtp://mailhog:1025
     > http://localhost/admin/conference/best
   
 - Administrator can manage users
-    > http://localhost/admin/user/
+    > http://localhost/admin/user
   
 - Page of voted and not voted conferences
     > http://localhost/conference/voted
   
 - Create admin with command
-    > app:create-admin
+    > app:create-admin [email] [password]
     
