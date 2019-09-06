@@ -18,13 +18,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * @Route("/conference")
- */
 class ConferenceController extends AbstractController
 {
     /**
-     * @Route("/voted", name="voted_conferences", methods={"GET"})
+     * @Route("/conference/voted", name="voted_conferences", methods={"GET"})
      */
     public function votedConferences(ConferenceRepository $conferenceRepository, RatingManager $ratingManager)
     {
@@ -61,7 +58,7 @@ class ConferenceController extends AbstractController
     }
 
     /**
-     * @Route("/all", name="conference_index", methods={"GET"})
+     * @Route("/admin/conference/all", name="conference_index", methods={"GET"})
      */
     public function index(ConferenceRepository $conferenceRepository, RatingManager $ratingManager): Response
     {
@@ -79,7 +76,7 @@ class ConferenceController extends AbstractController
     }
 
     /**
-     * @Route("/best", name="conference_best", methods={"GET"})
+     * @Route("/admin/conference/best", name="conference_best", methods={"GET"})
      */
     public function best(ConferenceRepository $conferenceRepository, RatingManager $ratingManager): Response
     {
@@ -94,7 +91,7 @@ class ConferenceController extends AbstractController
     }
 
     /**
-     * @Route("/new", name="conference_new", methods={"GET","POST"})
+     * @Route("/admin/conference/new", name="conference_new", methods={"GET","POST"})
      */
     public function new(Request $request, EmailManager $emailManager): Response
     {
@@ -118,7 +115,7 @@ class ConferenceController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="conference_show", methods={"GET"})
+     * @Route("/conference/{id}", name="conference_show", methods={"GET"})
      */
     public function show(Conference $conference, RatingManager $ratingManager, RatingRepository $ratingRepository): Response
     {
@@ -132,7 +129,7 @@ class ConferenceController extends AbstractController
     }
 
     /**
-     * @Route("edit/{id}", name="conference_edit", methods={"GET","POST"})
+     * @Route("/admin/conference/edit/{id}", name="conference_edit", methods={"GET","POST"})
      */
     public function edit(Request $request, Conference $conference): Response
     {
@@ -152,10 +149,17 @@ class ConferenceController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="conference_delete", methods={"DELETE"})
+     * @Route("/admin/conference/{id}", name="conference_delete", methods={"DELETE"})
      */
-    public function delete(Request $request, Conference $conference): Response
+    public function delete(Request $request, Conference $conference, RatingRepository $ratingRepository): Response
     {
+        $ratings = $ratingRepository->findBy(["conference" => $conference]);
+        foreach ($ratings as $rating){
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->remove($rating);
+            $entityManager->flush();
+        }
+
         if ($this->isCsrfTokenValid('delete'.$conference->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($conference);
@@ -166,7 +170,7 @@ class ConferenceController extends AbstractController
     }
 
     /**
-     * @Route("/search", name="conference_search")
+     * @Route("/conference/search", name="conference_search")
      */
     public function search(Request $request, ConferenceManager $conferenceManager, RatingManager $ratingManager, RatingRepository $ratingRepository): Response
     {

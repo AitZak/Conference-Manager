@@ -14,7 +14,7 @@
         <tbody>
         {% for conference in votedConferences %}
             <tr>
-                <td><a href="{{ path('conference_show', {'id': conference.id}) }}">{{ conference.title }}</a></td>
+                <td>{{ conference.title }}</td>
                 <td>{{ conference.description }}</td>
                 <td><a href="{{ path('conference_show', {'id': conference.id}) }}">Vote</a></td>
             </tr>
@@ -38,7 +38,7 @@
         <tbody>
         {% for conference in unvotedConferences %}
             <tr>
-                <td><a href="{{ path('conference_show', {'id': conference.id}) }}">{{ conference.title }}</a></td>
+                <td>{{ conference.title }}</td>
                 <td>{{ conference.description }}</td>
                 <td><a href="{{ path('conference_show', {'id': conference.id}) }}">Vote</a></td>
             </tr>

@@ -19,6 +19,11 @@
 <p>
     <a href="{{ path('home') }}">Home</a>
 </p>
+{% if is_granted('ROLE_ADMIN') %}
+    <p><a href="{{ path('conference_best') }}">Top 10</a></p>
+    <p><a href="{{ path('conference_index') }}">All Conferences</a></p>
+    <p><a href="{{ path('user_index') }}">All Users</a></p>
+{% endif %}
 {% if is_granted('IS_AUTHENTICATED_FULLY') %}
     <p><a href="{{ path('logout') }}">Log out</a></p>
     <p><a href="{{ path('voted_conferences') }}">Voted/unvoted conferences</a></p>
