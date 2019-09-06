@@ -33,7 +33,7 @@ class Conference
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="conferences")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      */
     private $user;
 

@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\UserType;
+use App\Repository\RatingRepository;
 use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -12,7 +13,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 /**
- * @Route("/user")
+ * @Route("/admin/user")
  */
 class UserController extends AbstractController
 {
@@ -86,8 +87,26 @@ class UserController extends AbstractController
     /**
      * @Route("/{id}", name="user_delete", methods={"DELETE"})
      */
-    public function delete(Request $request, User $user): Response
+    public function delete(Request $request, User $user, RatingRepository $ratingRepository): Response
     {
+        $conferences = $user->getConferences();
+        foreach ($conferences as $conference){
+            $conference->setUser(null);
+            $ratings = $ratingRepository->findBy(["conference" => $conference]);
+            foreach ($ratings as $rating){
+                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager->remove($rating);
+                $entityManager->flush();
+            }
+        }
+
+        $ratings = $ratingRepository->findBy(["user" => $user]);
+        foreach ($ratings as $rating){
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->remove($rating);
+            $entityManager->flush();
+        }
+
         if ($this->isCsrfTokenValid('delete'.$user->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($user);
