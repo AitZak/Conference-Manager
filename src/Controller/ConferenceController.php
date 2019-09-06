@@ -4,12 +4,14 @@ namespace App\Controller;
 
 use App\Entity\Conference;
 use App\Form\ConferenceType;
+use App\Form\RegisterConferenceType;
 use App\Manager\ConferenceManager;
 use App\Manager\EmailManager;
 use App\Manager\RatingManager;
 use App\Repository\ConferenceRepository;
 use App\Repository\RatingRepository;
 use App\Repository\UserRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Monolog\Handler\SwiftMailerHandler;
 use Swift_SendmailTransport;
 use Swift_SmtpTransport;
@@ -17,6 +19,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Security;
 
 class ConferenceController extends AbstractController
 {
@@ -54,6 +57,25 @@ class ConferenceController extends AbstractController
         return $this->render('conference/votedconferences.html.twig', [
             'votedConferences' => $votedConf,
             'unvotedConferences' => $unvotedConf,
+        ]);
+    }
+    /**
+     * @Route("/create/conference", name="conference_create", methods={"GET","POST"})
+     */
+    public function create(Request $request, EntityManagerInterface $em, Security $security)
+    {
+        $conference = new Conference();
+        $conference->setUser($security->getUser());
+        $form = $this->createForm(RegisterConferenceType::class, $conference);
+        $form->handleRequest($request);
+
+        if( $form->isSubmitted() && $form->isValid()){
+            $em->persist($conference);
+            $em->flush();
+        }
+
+        return $this->render('conference/create.html.twig', [
+            'form' => $form->createView(),
         ]);
     }
 
