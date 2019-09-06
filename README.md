@@ -25,3 +25,20 @@ cp .env.dist .env
 docker-compose up -d
 docker-compose exec --user=application web bash
 ```
+### Fonctionnalités
+
+Web: http://localhost
+
+- L’administrateur peut gérer les conférences
+  > http://localhost/admin/conference/all
+  
+- L’administrateur peut voir le top 10 des conférences
+  > http://localhost/admin/conference/best
+  
+- L’administrateur peut gérer les utilisateurs
+  > http://localhost/admin/user/
+  
+- Page des conférences notées / non votées
+  > http://localhost/conference/voted
+  
+  
