@@ -2,6 +2,7 @@
 
 namespace App\Manager;
 
+use App\Entity\User;
 use App\Repository\RatingRepository;
 
 class RatingManager
@@ -27,4 +28,15 @@ class RatingManager
         }
         return 0;
     }
+
+    public function getVotedConferencesByUser(User $user)
+    {
+        $ratings = $this->ratingRepository->findBy(['user' => $user]);
+        $conferencesId = [];
+        foreach ($ratings as $rating){
+            array_push($conferencesId, $rating->getConference()->getId());
+        }
+        return $conferencesId;
+    }
+
 }

@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+
+
+{% block body %}
+    <h1>All voted Conferences</h1>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for conference in votedConferences %}
+            <tr>
+                <td><a href="{{ path('conference_show', {'id': conference.id}) }}">{{ conference.title }}</a></td>
+                <td>{{ conference.description }}</td>
+                <td><a href="{{ path('conference_show', {'id': conference.id}) }}">Vote</a></td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <h1>All unvoted Conferences</h1>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for conference in unvotedConferences %}
+            <tr>
+                <td><a href="{{ path('conference_show', {'id': conference.id}) }}">{{ conference.title }}</a></td>
+                <td>{{ conference.description }}</td>
+                <td><a href="{{ path('conference_show', {'id': conference.id}) }}">Vote</a></td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}

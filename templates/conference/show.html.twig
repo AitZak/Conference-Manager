@@ -7,32 +7,66 @@
 
     <table class="table">
         <tbody>
+        <tr>
+            <th>Title</th>
+            <td>{{ conference.title }}</td>
+        </tr>
+        <tr>
+            <th>Description</th>
+            <td>{{ conference.description }}</td>
+        </tr>
+        <tr>
+            <th>Average</th>
+            <td>{{ average }}</td>
+        </tr>
+        {% set myVote = 0 %}
+        {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+            {% for rating in ratings %}
+                {% if rating.conference.id == conference.id and rating.user.id == app.user.id %}
+                    {% set myVote = rating.value %}
+                {% endif %}
+            {% endfor %}
             <tr>
-                <th>Id</th>
-                <td>{{ conference.id }}</td>
+                <th>My Vote</th>
+
+                <td id="myVote" data-vote="{{ myVote }}" data-confid="{{ conference.id }}" data-userid="{{ app.user.id }}"></td>
             </tr>
-            <tr>
-                <th>Title</th>
-                <td>{{ conference.title }}</td>
-            </tr>
-            <tr>
-                <th>Description</th>
-                <td>{{ conference.description }}</td>
-            </tr>
-            <tr>
-                <th>Date</th>
-                <td>{{ conference.date ? conference.date|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-            <tr>
-                <th>Note</th>
-                <td>{{ average }}</td>
-            </tr>
+        {% endif %}
         </tbody>
     </table>
+    {% if is_granted('ROLE_ADMIN') %}
+            <a href="{{ path('conference_edit', {'id': conference.id}) }}">edit</a>
+        {{ include('conference/_delete_form.html.twig') }}
+    {% endif %}
 
-    <a href="{{ path('conference_index') }}">back to list</a>
+{% endblock %}
+{% block javascripts %}
+    <script>
+        $(document).ready(function () {
+            $('#myVote').each(function () {
+                var value = $(this).attr("data-vote");
+                $(this).rateYo({
+                    rating: value,
+                    starWidth: "25px",
+                    onSet: function (rating, rateYoInstance) {
 
-    <a href="{{ path('conference_edit', {'id': conference.id}) }}">edit</a>
-
-    {{ include('conference/_delete_form.html.twig') }}
+                        let confId= $('#myVote').attr("data-confid");
+                        let userId= $('#myVote').attr("data-userid");
+                        $.ajax({
+                            url: "{{ path('submit_rate') }}",
+                            type: "GET",
+                            data: {
+                                confId: confId,
+                                userId: userId,
+                                rate: rating,
+                            },
+                            success: function () {
+                                document.location.reload(true);
+                            }
+                        });
+                    },
+                });
+            });
+        });
+    </script>
 {% endblock %}
